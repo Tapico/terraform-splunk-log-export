@@ -101,7 +101,7 @@ resource "google_dataflow_job" "dataflow_job" {
   region  = var.region
   network = var.network
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataflow_job#subnetwork
-  subnetwork       = "https://www.googleapis.com/compute/v1/projects/${var.vpc_project}/regions/${var.region}/subnetworks/${local.subnet_name}"
+  subnetwork       = var.create_network ? "regions/${var.region}/subnetworks/${local.subnet_name}" : "https://www.googleapis.com/compute/v1/projects/${var.vpc_project}/regions/${var.region}/subnetworks/${local.subnet_name}"
   ip_configuration = "WORKER_IP_PRIVATE"
 
   lifecycle {
