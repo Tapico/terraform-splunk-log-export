@@ -50,7 +50,7 @@ locals {
   # Cross validate Dataflow service account variables
   # TODO: Remove once https://github.com/hashicorp/terraform/issues/25609 is resolved or use pre-conditions if version > 1.2.0
   # tflint-ignore: terraform_unused_declarations
-  validate_sa_settings = (var.use_externally_managed_dataflow_sa && var.dataflow_worker_service_account == "") ? tobool("Please pass dataflow_worker_service_account if you want to manage it externally.") : true
+  # validate_sa_settings = (var.use_externally_managed_dataflow_sa && var.dataflow_worker_service_account == "") ? tobool("Please pass dataflow_worker_service_account if you want to manage it externally.") : true
   # Grant Dataflow worker service account required IAM roles over external resources
   # **unless** using an externally managed worker service account (Option 1 and 2):
   grant_service_account_roles = var.use_externally_managed_dataflow_sa == false
