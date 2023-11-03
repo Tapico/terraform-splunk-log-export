@@ -64,6 +64,15 @@ resource "google_project_iam_binding" "dataflow_worker_role" {
     "serviceAccount:${local.dataflow_worker_service_account}"
   ]
 }
+resource "google_compute_subnetwork_iam_binding" "dataflow_worker_role_shared_vpc" {
+  project    = var.vpc_project
+  region     = var.region
+  subnetwork = var.subnet
+  role       = "roles/compute.networkUser"
+  members = [
+    "serviceAccount:${local.dataflow_worker_service_account}",
+  ]
+}
 
 resource "google_secret_manager_secret_iam_member" "dataflow_worker_secret_access" {
   count = (var.splunk_hec_token_source == "SECRET_MANAGER" &&
