@@ -33,6 +33,7 @@ resource "google_pubsub_subscription" "dataflow_deadletter_pubsub_sub" {
 }
 
 resource "google_storage_bucket" "dataflow_job_temp_bucket" {
+  count                       = var.create_buckets == true ? 1 : 0
   project                     = var.project
   name                        = local.dataflow_temporary_gcs_bucket_name
   location                    = var.region
@@ -47,6 +48,7 @@ resource "google_storage_bucket" "dataflow_job_temp_bucket" {
 }
 
 resource "google_storage_bucket_object" "dataflow_job_temp_object" {
+  count   = var.create_buckets == true ? 1 : 0
   name    = local.dataflow_temporary_gcs_bucket_path
   content = "Placeholder for Dataflow to write temporary files"
   bucket  = google_storage_bucket.dataflow_job_temp_bucket.name
@@ -63,7 +65,7 @@ resource "google_dataflow_job" "dataflow_job" {
   project               = var.project
   name                  = local.dataflow_main_job_name
   template_gcs_path     = local.dataflow_splunk_template_gcs_path
-  temp_gcs_location     = "gs://${local.dataflow_temporary_gcs_bucket_name}/${local.dataflow_temporary_gcs_bucket_path}"
+  temp_gcs_location     = (var.create_buckets == true) ? "gs://${local.dataflow_temporary_gcs_bucket_name}/${local.dataflow_temporary_gcs_bucket_path}" : var.temp_gcs_location
   service_account_email = local.dataflow_worker_service_account
   machine_type          = var.dataflow_job_machine_type
   max_workers           = var.dataflow_job_machine_count

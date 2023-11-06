@@ -23,12 +23,13 @@ run a regular terraform deployment (ex. terraform apply).
 resource "google_dataflow_job" "splunk_dataflow_replay" {
   count = var.deploy_replay_job == true ? 1 : 0
 
-  project           = var.project
-  name              = local.dataflow_replay_job_name
-  template_gcs_path = local.dataflow_pubsub_template_gcs_path
-  temp_gcs_location = "gs://${local.dataflow_temporary_gcs_bucket_name}/${local.dataflow_temporary_gcs_bucket_path}"
-  machine_type      = var.dataflow_job_machine_type
-  max_workers       = var.dataflow_job_machine_count
+  project               = var.project
+  name                  = local.dataflow_replay_job_name
+  template_gcs_path     = local.dataflow_pubsub_template_gcs_path
+  temp_gcs_location     = (var.create_buckets == true) ? "gs://${local.dataflow_temporary_gcs_bucket_name}/${local.dataflow_temporary_gcs_bucket_path}" : var.temp_gcs_location
+  service_account_email = local.dataflow_worker_service_account
+  machine_type          = var.dataflow_job_machine_type
+  max_workers           = var.dataflow_job_machine_count
   parameters = {
     inputSubscription = google_pubsub_subscription.dataflow_deadletter_pubsub_sub.id
     outputTopic       = google_pubsub_topic.dataflow_input_pubsub_topic.id

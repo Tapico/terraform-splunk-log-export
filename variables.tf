@@ -213,3 +213,14 @@ variable "use_externally_managed_dataflow_sa" {
   default     = false
   description = "Determines if the worker service account provided by `dataflow_worker_service_account` variable should be created by this module (default) or is managed outside of the module. In the latter case, user is expected to apply and manage the service account IAM permissions over external resources (e.g. Cloud KMS key or Secret version) before running this module."
 }
+
+variable "create_buckets" {
+  type        = boolean
+  description = "Determines if the writeable location on GCS for the Dataflow job to dump its temporary data is created or not"
+  default     = true
+}
+
+variable "temp_gcs_location" {
+  type        = string
+  description = "A location on GCS for the Dataflow job to dump its temporary data. If `create_buckets=false`, then this should be created outside of the module and passed."
+}
