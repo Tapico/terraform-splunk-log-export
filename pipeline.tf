@@ -51,7 +51,7 @@ resource "google_storage_bucket_object" "dataflow_job_temp_object" {
   count   = var.create_buckets == true ? 1 : 0
   name    = local.dataflow_temporary_gcs_bucket_path
   content = "Placeholder for Dataflow to write temporary files"
-  bucket  = google_storage_bucket.dataflow_job_temp_bucket.name
+  bucket  = google_storage_bucket.dataflow_job_temp_bucket[count.index].name
 }
 
 resource "google_service_account" "dataflow_worker_service_account" {

@@ -215,7 +215,7 @@ variable "use_externally_managed_dataflow_sa" {
 }
 
 variable "create_buckets" {
-  type        = boolean
+  type        = bool
   description = "Determines if the writeable location on GCS for the Dataflow job to dump its temporary data is created or not"
   default     = true
 }

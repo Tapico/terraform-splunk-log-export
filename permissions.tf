@@ -49,7 +49,8 @@ resource "google_pubsub_topic_iam_binding" "deadletter_topic_publisher" {
 }
 
 resource "google_storage_bucket_iam_binding" "dataflow_worker_bucket_access" {
-  bucket = google_storage_bucket.dataflow_job_temp_bucket.name
+  count  = var.create_buckets == true ? 1 : 0
+  bucket = google_storage_bucket.dataflow_job_temp_bucket[count.index].name
   role   = "roles/storage.objectAdmin"
   members = [
     "serviceAccount:${local.dataflow_worker_service_account}"
@@ -62,15 +63,6 @@ resource "google_project_iam_binding" "dataflow_worker_role" {
   role    = "roles/dataflow.worker"
   members = [
     "serviceAccount:${local.dataflow_worker_service_account}"
-  ]
-}
-resource "google_compute_subnetwork_iam_binding" "dataflow_worker_role_shared_vpc" {
-  project    = var.vpc_project
-  region     = var.region
-  subnetwork = var.subnet
-  role       = "roles/compute.networkUser"
-  members = [
-    "serviceAccount:${local.dataflow_worker_service_account}",
   ]
 }
 
