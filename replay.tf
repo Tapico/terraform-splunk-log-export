@@ -26,7 +26,7 @@ resource "google_dataflow_job" "splunk_dataflow_replay" {
   project               = var.project
   name                  = local.dataflow_replay_job_name
   template_gcs_path     = local.dataflow_pubsub_template_gcs_path
-  temp_gcs_location     = (var.create_buckets == true) ? "gs://${local.dataflow_temporary_gcs_bucket_name}/${local.dataflow_temporary_gcs_bucket_path}" : var.temp_gcs_location
+  temp_gcs_location     = var.temp_gcs_location
   service_account_email = local.dataflow_worker_service_account
   machine_type          = var.dataflow_job_machine_type
   max_workers           = var.dataflow_job_machine_count
@@ -49,6 +49,5 @@ resource "google_dataflow_job" "splunk_dataflow_replay" {
 
   depends_on = [
     google_compute_subnetwork.splunk_subnet,
-    google_storage_bucket_object.dataflow_job_temp_object
   ]
 }

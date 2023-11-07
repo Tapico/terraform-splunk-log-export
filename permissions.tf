@@ -48,15 +48,6 @@ resource "google_pubsub_topic_iam_binding" "deadletter_topic_publisher" {
   ]
 }
 
-resource "google_storage_bucket_iam_binding" "dataflow_worker_bucket_access" {
-  count  = var.create_buckets == true ? 1 : 0
-  bucket = google_storage_bucket.dataflow_job_temp_bucket[count.index].name
-  role   = "roles/storage.objectAdmin"
-  members = [
-    "serviceAccount:${local.dataflow_worker_service_account}"
-  ]
-}
-
 resource "google_project_iam_binding" "dataflow_worker_role" {
   count   = (local.grant_service_account_roles == true) ? 1 : 0
   project = var.project
