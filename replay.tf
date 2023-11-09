@@ -36,7 +36,7 @@ resource "google_dataflow_job" "splunk_dataflow_replay" {
   }
   region           = var.region
   network          = var.network
-  subnetwork       = "regions/${var.region}/subnetworks/${local.subnet_name}"
+  subnetwork       = var.create_network ? "regions/${var.region}/subnetworks/${local.subnet_name}" : "https://www.googleapis.com/compute/v1/projects/${var.vpc_project}/regions/${var.region}/subnetworks/${local.subnet_name}"
   ip_configuration = "WORKER_IP_PRIVATE"
 
   on_delete = "cancel"
